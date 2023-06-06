@@ -1,4 +1,11 @@
 pipeline {
+
+  environment {
+    registry = "majindean/flask_app"
+    registryCredentials = "docker"
+    cluster_name = "skillstorm"
+  }
+
   agent {
     node {
       label 'docker'
@@ -11,24 +18,23 @@ pipeline {
         git(url: 'https://github.com/MajinBeans/flasking.git', branch: 'main')
       }
     }
-
-    stage('Docker Build') {
+    stage('Build Stage') {
       steps {
-        sh 'docker build -t majindean/flask_app .'
+        script {
+          dockerImage = docker.build(registry)
+        }
       }
     }
 
-    stage('Docker Login') {
+    stage('Deployment Stage') {
       steps {
-        sh 'docker login -u majindean -p dckr_pat_GTakJpJREGg5L9T5HjBdEKiOJmY'
+        script {
+          docker.withRegistry('', registryCredentials) {
+            dockerImage.push()
+          }
+        }
       }
     }
-
-    stage('Docker Push') {
-      steps {
-        sh 'docker push majindean/flask_app'
-      }
-    }
-
+    
   }
 }
