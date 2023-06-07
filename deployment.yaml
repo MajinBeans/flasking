@@ -1,14 +1,14 @@
 apiVersion: apps/v1 
 kind: Deployment 
 metadata: 
-  name:  dbaeflaskcontainer 
+  name:  dbaeflask
   namespace: majindean 
   labels: 
-    app:  dbaeflaskcontainer 
+    app:  dbaeflask
 spec: 
   selector: 
     matchLabels: 
-      app: dbaeflaskcontainer 
+      app: dbaeflask
   replicas: 1 
   strategy: 
     rollingUpdate: 
@@ -18,10 +18,10 @@ spec:
   template: 
     metadata: 
       labels: 
-        app:  dbaeflaskcontainer 
+        app:  dbaeflask
     spec: 
       containers: 
-      - name:  dbaeflaskcontainer 
+      - name:  dbaeflask
         image:  majindean/flask_app 
         resources: 
           requests: 
@@ -32,7 +32,7 @@ spec:
             memory: 100Mi 
         ports: 
         - containerPort:  5000 
-          name:  dbaeflaskcontainer 
+          name:  dbaeflask
         imagePullPolicy: Always 
       restartPolicy: Always 
  
@@ -40,18 +40,18 @@ spec:
 apiVersion: v1 
 kind: Service 
 metadata: 
-  name: dbaeflaskcontainer 
+  name: dbaeflask
   namespace: majindean 
 spec: 
   selector: 
-    app: dbaeflaskcontainer 
+    app: dbaeflask
   type: LoadBalancer 
   sessionAffinity: None 
   sessionAffinityConfig: 
     clientIP: 
       timeoutSeconds: 10800 
   ports: 
-  - name: dbaeflaskcontainer 
+  - name: dbaeflask
     protocol: TCP 
     port: 80 
     targetPort: 5000
